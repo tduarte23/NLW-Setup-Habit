@@ -70,4 +70,7 @@ app.get('/day',async (request) =>{
         completedHabits,
     }
 })
+app.patch('/habits/:id/toogle', ()=>{
+    
+})
 }
