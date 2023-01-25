@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { ScrollView, Text, TextInput, TouchableOpacity, View, Alert } from "react-native";
 import { Feather } from '@expo/vector-icons'
 import colors from "tailwindcss/colors";
+import {api} from "../lib/axios"
 
 import { BackButton } from "../components/BackButton";
 import { Checkbox } from "../components/Checkbox";
@@ -9,6 +10,7 @@ import { Checkbox } from "../components/Checkbox";
 const availableWeekDays = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
 
 export function New() {
+  const [title,setTitle] = useState('');
   const [weekDays, setWeekDays] = useState<number[]>([]);
 
   function handleToggleWeekDay(weekDayIndex: number) {
@@ -16,6 +18,22 @@ export function New() {
       setWeekDays(prevState => prevState.filter(weekDay => weekDay !== weekDayIndex))
     } else {
       setWeekDays(prevState => [...prevState, weekDayIndex])
+    }
+  }
+
+  async function handleCreateNewHanit() {
+    try {
+      if(!title.trim() || weekDays.length === 0) {
+        Alert.alert('Novo Habito', 'Informe o nome do Habito')
+      }
+      await api.post('/habits', {title,weekDays});
+      setTitle('');
+      setWeekDays([]);
+
+      Alert.alert('Novo Habito', 'Habito criado com suceso')
+    } catch (error) {
+      console.log(error);
+      Alert.alert('Ops','Nao foi possivel criar o novo habito')
     }
   }
   return (
@@ -38,6 +56,8 @@ export function New() {
           className="h-12 pl-4 rounded-lg mt-3 bg-zinc-900 text-white border-2 border-zinc-800 focus:border-green-600"
           placeholder="Exercícios, dormir bem, etc..."
           placeholderTextColor={colors.zinc[400]}
+          onChangeText={setTitle}
+          value={title}
         />
 
         <Text className="font-semibold mt-4 mb-3 text-white text-base">

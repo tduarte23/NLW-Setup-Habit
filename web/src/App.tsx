@@ -2,7 +2,7 @@ import { useState } from 'react'
 import './styles/global.css'
 import { Header } from './components/header'
 import { SummaryTable } from './components/summaryTable'
-
+import './lib/dayjs'
 
 export function App() {
 
